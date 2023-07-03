@@ -22,12 +22,12 @@ if(NOT BUILD_SHARED_LIBS)
     set(SFML_STATIC_LIBRARIES FALSE)
 endif()
 
-# Find SFML
-find_package(SFML 2.5.1 COMPONENTS audio graphics system window network REQUIRED)
-
-if(NOT SFML_FOUND)
-    message(FATAL_ERROR "SFML couldn't be located!")
-endif()
+include(FetchContent)
+FetchContent_Declare(
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
@@ -90,10 +90,6 @@ endif()
 
 # Link libraries
 target_link_libraries(CaveExplorer
-    "-framework Cocoa"
-    "-framework AppKit"
-    "-framework CoreData"
-    "-framework Foundation"
     sfml-audio
     sfml-graphics
     sfml-system
@@ -104,6 +100,3 @@ target_link_libraries(CaveExplorer
 install(TARGETS CaveExplorer
         RUNTIME DESTINATION .)
 
-# Install game data
-install(DIRECTORY bin/
-        DESTINATION .)

@@ -279,57 +279,66 @@ void PlayState::update(const sf::Time delta_time)
         }
         else if (m_move_forward)
         {
-            m_num_cave_positioned = m_num_cave_viewing;
-            
-            ///< Moved into Pit (GAME OVER)
-            if ( m_num_cave_positioned == m_num_cave_pit )
+            if ( m_player.getLookingDown() )
             {
-                m_fade_in = false;
-                m_game_over = true;
-                
-                playFallWithImpactSound();
+                m_caves[m_num_cave_viewing].setShowingGround( !m_caves[ m_num_cave_viewing ].getShowingGround() );
+                m_player.setLookingDown(false);
             }
-            ///< Moved into Basilisk (GAME OVER)
-            if ( m_num_cave_positioned == m_num_cave_basilisk )
+            else
             {
-                m_fade_in = false;
-                m_game_over = true;
+                m_num_cave_positioned = m_num_cave_viewing;
                 
-                playBasiliskAttackSound();
-            }
-            
-            unsigned int count = 0;
-            for (auto &edge : m_map.edges())
-            {
-                if (edge.src == m_num_cave_positioned)
+                ///< Moved into Pit (GAME OVER)
+                if ( m_num_cave_positioned == m_num_cave_pit )
                 {
-                    //std::cout << edge.src << " leads to " << edge.dest << std::endl;
-                    switch (count)
+                    m_fade_in = false;
+                    m_game_over = true;
+                    
+                    playFallWithImpactSound();
+                }
+                ///< Moved into Basilisk (GAME OVER)
+                if ( m_num_cave_positioned == m_num_cave_basilisk )
+                {
+                    m_fade_in = false;
+                    m_game_over = true;
+                    
+                    playBasiliskAttackSound();
+                }
+                
+                unsigned int count = 0;
+                for (auto &edge : m_map.edges())
+                {
+                    if (edge.src == m_num_cave_positioned)
                     {
-                        case 0:
-                            m_num_cave_viewing = edge.dest;
-                            count++;
-                            break;
-                        case 1:
-                            m_num_cave_left = edge.dest;
-                            count++;
-                            break;
-                        case 2:
-                            m_num_cave_right = edge.dest;
-                            count++;
-                            break;
-                        default:
-                            break;
+                        //std::cout << edge.src << " leads to " << edge.dest << std::endl;
+                        switch (count)
+                        {
+                            case 0:
+                                m_num_cave_viewing = edge.dest;
+                                count++;
+                                break;
+                            case 1:
+                                m_num_cave_left = edge.dest;
+                                count++;
+                                break;
+                            case 2:
+                                m_num_cave_right = edge.dest;
+                                count++;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
+                
+                ///< Only scan neighbor caves if a move has been made
+                scanNeighborCaves();
             }
-            
-            ///< Only scan neighbor caves if a move has been made
-            scanNeighborCaves();
         }
         else if (m_look_down)
         {
             m_caves[m_num_cave_viewing].setShowingGround( !m_caves[ m_num_cave_viewing ].getShowingGround() );
+            m_player.setLookingDown(true);
         }
         
         //std::cout << "In:      " << m_num_cave_positioned << std::endl;

@@ -14,6 +14,8 @@
 
 #include "../UI/GUI/SmartCursor.hpp"
 
+#include "../Entity/Player.hpp"
+
 #include <SFML/Audio.hpp>
 
 struct Resources;
@@ -90,4 +92,6 @@ private:
     Icon m_backpack_icon;
     Icon m_map_icon;
     Icon m_crosshair_icon;
+    
+    Player m_player;
 };

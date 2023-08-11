@@ -11,7 +11,7 @@ int main()
     }
     catch (std::exception& e)
     {
-        std::cerr << "SmallGameFramework detected an error: " << e.what() << '\n';
-        std::cerr << "Due to this error the SmallGameFramework unfortunately needs to terminate." << std::endl;
+        std::cerr << "CaveExplorer detected an error: " << e.what() << '\n';
+        std::cerr << "Due to this error the CaveExplorer unfortunately needs to terminate." << std::endl;
     }
 }
